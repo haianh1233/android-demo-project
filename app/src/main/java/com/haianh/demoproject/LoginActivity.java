@@ -27,11 +27,11 @@ public class LoginActivity extends AppCompatActivity {
             String user = editText_User.getText().toString();
             String pass = editText_Pass.getText().toString();
             if(user.equals("admin") && pass.equals("admin")) {
-                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show();
                 switchActivities();
             }
             else {
-                Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
             }
 
         });
