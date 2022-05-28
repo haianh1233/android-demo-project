@@ -4,17 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/editTextTextPersonName"
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="241dp"
+        android:layout_height="28dp"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteX="17dp"
+        tools:layout_editor_absoluteY="19dp"
+        app:layout_constraintEnd_toStartOf="@+id/exit_button"
+        app:layout_constraintStart_toStartOf="parent"
+         />
+
+    <Button
+        android:id="@+id/exit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Main Page"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Log out"
+        tools:layout_editor_absoluteX="275dp"
+        tools:layout_editor_absoluteY="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/WelcomeText"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

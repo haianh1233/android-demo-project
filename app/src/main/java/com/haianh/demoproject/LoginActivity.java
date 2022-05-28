@@ -1,5 +1,6 @@
 package com.haianh.demoproject;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
     private EditText editText_User, editText_Pass;
     private Button button_Login, button_SignUp;
+    public static final int EXIT_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
             String pass = editText_Pass.getText().toString();
             if(user.equals("admin") && pass.equals("admin")) {
                 Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show();
-                switchActivities();
+                switchActivities(user, pass);
             }
             else {
                 Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
@@ -37,8 +39,31 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void switchActivities() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if(requestCode == EXIT_CODE) {
+            String username = "";
+            String password = "";
+            if(data != null) {
+                username = data.getStringExtra("username");
+                password = data.getStringExtra("password");
+            }
+
+            if(editText_User != null)
+                editText_User.setText(username);
+
+            if(editText_Pass != null)
+                editText_Pass.setText(password);
+        }
+    }
+
+    private void switchActivities(String username, String password) {
         Intent switchActivityIntent = new Intent(this, MainActivity.class);
-        startActivity(switchActivityIntent);
+        switchActivityIntent.putExtra("username", username);
+        switchActivityIntent.putExtra("password", password);
+        startActivityForResult(switchActivityIntent, LoginActivity.EXIT_CODE);
+
+        Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
     }
 }
