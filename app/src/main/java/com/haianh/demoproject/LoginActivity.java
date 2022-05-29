@@ -64,6 +64,5 @@ public class LoginActivity extends AppCompatActivity {
         switchActivityIntent.putExtra("password", password);
         startActivityForResult(switchActivityIntent, LoginActivity.EXIT_CODE);
 
-        Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
     }
 }

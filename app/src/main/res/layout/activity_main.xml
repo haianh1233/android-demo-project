@@ -12,20 +12,26 @@
         android:layout_width="241dp"
         android:layout_height="28dp"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="17dp"
-        tools:layout_editor_absoluteY="19dp"
         app:layout_constraintEnd_toStartOf="@+id/exit_button"
         app:layout_constraintStart_toStartOf="parent"
-         />
+        tools:layout_editor_absoluteY="19dp" />
 
     <Button
         android:id="@+id/exit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Log out"
-        tools:layout_editor_absoluteX="275dp"
-        tools:layout_editor_absoluteY="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/WelcomeText"
-        />
+        app:layout_constraintStart_toEndOf="@+id/welcome_text"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_view"
+        android:layout_width="331dp"
+        android:layout_height="597dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcome_text"
+        app:layout_constraintVertical_bias="1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

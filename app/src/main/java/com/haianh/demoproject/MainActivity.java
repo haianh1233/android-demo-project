@@ -1,12 +1,16 @@
 package com.haianh.demoproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private String welcomeText;
@@ -16,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         Intent intent = getIntent();
 
@@ -37,5 +39,21 @@ public class MainActivity extends AppCompatActivity {
             setResult(LoginActivity.EXIT_CODE, intent);
             finish();
         });
+
+        RecyclerView recyclerView = findViewById(R.id.main_view);
+        recyclerView.setHasFixedSize(true);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        ArrayList<MyData> list = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            list.add(new MyData("Item" + i));
+        }
+
+        Adapter adapter = new Adapter(list, getApplicationContext());
+
+        recyclerView.setAdapter(adapter);
     }
 }
