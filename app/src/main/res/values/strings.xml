@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">android-demo-project</string>
-    <color name="blue">#03A9F4</color>
+    <string name="app_name">Foody</string>
 </resources>
