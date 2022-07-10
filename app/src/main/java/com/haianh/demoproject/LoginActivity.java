@@ -55,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
 
             if(editText_Pass != null)
                 editText_Pass.setText(password);
+        }else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
