@@ -4,39 +4,49 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.haianh.demoproject.dao.AdminDao;
+import com.haianh.demoproject.database.Database;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText editText_User, editText_Pass;
     private Button button_Login, button_SignUp;
+    private CheckBox rememberMe;
     public static final int EXIT_CODE = 100;
 
+    AdminDao dao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        dao = new AdminDao(this);
         editText_User = findViewById(R.id.username);
         editText_Pass = findViewById(R.id.password);
         button_Login = findViewById(R.id.button_login);
         button_SignUp = findViewById(R.id.button_signup);
+        rememberMe = findViewById(R.id.rememberMe);
 
-        button_Login.setOnClickListener(v -> {
-            String user = editText_User.getText().toString();
-            String pass = editText_Pass.getText().toString();
-            if(user.equals("admin") && pass.equals("admin")) {
-                Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show();
-                switchActivities(user, pass);
-            }
-            else {
-                Toast.makeText(this, "Login Failed", Toast.LENGTH_LONG).show();
-            }
+        SharedPreferences pref = getSharedPreferences("information.dat", MODE_PRIVATE);
+        String un = pref.getString("username", "");
+        String pwd = pref.getString("password", "");
+        boolean check = pref.getBoolean("rememberMe", Boolean.FALSE);
 
-        });
+        editText_User.setText(un);
+        editText_Pass.setText(pwd);
+        rememberMe.setChecked(check);
+
+        if(check)
+            checkLogin();
+
+        button_Login.setOnClickListener(v -> checkLogin());
     }
 
     @Override
@@ -60,11 +70,38 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void switchActivities(String username, String password) {
-        Intent switchActivityIntent = new Intent(this, MainActivity.class);
-        switchActivityIntent.putExtra("username", username);
-        switchActivityIntent.putExtra("password", password);
-        startActivityForResult(switchActivityIntent, LoginActivity.EXIT_CODE);
+    public void checkLogin(){
+        String strUser = editText_User.getText().toString();
+        String pass = editText_Pass.getText().toString();
+        boolean check = rememberMe.isChecked();
+        if(strUser.isEmpty() || pass.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Username or password wrong", Toast.LENGTH_SHORT).show();
+        }else{
+            if(dao.Authentication(strUser, pass)){
+                Database.US = strUser;
+                Database.PW = pass;
+                Remember(strUser, pass, check);
+                Toast.makeText(getApplicationContext(), "Login successfully", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(this, MainActivity.class);
+                i.putExtra("username", strUser);
+                i.putExtra("password", pass);
+                startActivityForResult(i, LoginActivity.EXIT_CODE);
+            }else{
+                Toast.makeText(getApplicationContext(), "Username or password wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void Remember(String user_name, String pass_word, boolean check){
+        SharedPreferences pref = getSharedPreferences("information.dat", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        if(check){
+            editor.putString("username",user_name);
+            editor.putString("password",pass_word);
+            editor.putBoolean("rememberMe", check);
 
+        }else{
+            editor.clear();
+        }
+        editor.commit();
     }
 }
