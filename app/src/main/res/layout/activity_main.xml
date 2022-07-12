@@ -53,6 +53,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/main_layout_3"
     >
+        <Button
+            android:id="@+id/addNewItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thêm mới sản phẩm"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -65,14 +76,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         >
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_view"
+
+        <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1" />
+            android:id="@+id/main_view"
+            />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

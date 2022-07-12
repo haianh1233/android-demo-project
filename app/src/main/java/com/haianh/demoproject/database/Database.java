@@ -21,10 +21,22 @@ public class Database extends SQLiteOpenHelper {
         sql = "CREATE TABLE USER(Username Text primary key not null, password Text)";
         db.execSQL(sql);
         db.execSQL("INSERT INTO USER VALUES('user', 'user')");
+
+        sql = "Create table Item(Id integer primary key autoincrement," +
+                "Name text, Price REAL, Description text)";
+        db.execSQL(sql);
+        sql = "Insert Into Item Values(null, 'CocaCola', '50000', 'Thuc uong co ga')";
+        db.execSQL(sql);
+        sql = "Insert Into Item Values(null, 'Pepsi', '55000', 'Thuc uong co ga')";
+        db.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("Drop table if exists Item");
+        db.execSQL("Drop table if exists User");
+        db.execSQL("Drop table if exists Admin");
 
+        onCreate(db);
     }
 }

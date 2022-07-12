@@ -2,28 +2,42 @@ package com.haianh.demoproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.haianh.demoproject.dao.ItemDao;
+import com.haianh.demoproject.model.Item;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private String welcomeText;
     private Button exitButton;
+    private Button addItemButton;
+    List<Item> items;
+    ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        addItemButton = findViewById(R.id.addNewItem);
 
         Intent intent = getIntent();
 
@@ -44,21 +58,98 @@ public class MainActivity extends AppCompatActivity {
 //            finish();
 //        });
 
-        RecyclerView recyclerView = findViewById(R.id.main_view);
-        recyclerView.setHasFixedSize(true);
+        ListView recyclerView = findViewById(R.id.main_view);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        ArrayList<MyData> list = new ArrayList<>();
-
-        for (int i = 0; i < 100; i++) {
-            list.add(new MyData("Item" + i));
-        }
-
-        Adapter adapter = new Adapter(list, getApplicationContext());
+        items = ItemDao.getAll(MainActivity.this);
+        adapter = new ArrayAdapter(MainActivity.this,  android.R.layout.simple_list_item_1 , items);
 
         recyclerView.setAdapter(adapter);
+
+        addItemButton.setOnClickListener(v -> showAddDialog());
+
+        recyclerView.setOnItemClickListener(((parent, view, position, id) -> showUpdateDialog(position)));
+    }
+
+    private void showUpdateDialog(int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_update, null);
+        builder.setView(view);
+        Dialog dialog = builder.create();
+        dialog.show();
+
+        EditText name = view.findViewById(R.id.updateItemName);
+        EditText price = view.findViewById(R.id.updateItemPrice);
+        EditText description = view.findViewById(R.id.updateItemDescription);
+        Button btnUpdate = view.findViewById(R.id.btnUpdateItem);
+        Button btnDelete = view.findViewById(R.id.btnDeleteItem);
+        Item item = items.get(position);
+        name.setText(item.getName());
+        price.setText(String.valueOf(item.getPrice()));
+        description.setText(item.getDescription());
+
+        btnUpdate.setOnClickListener(v -> {
+            item.setName(name.getText().toString());
+            item.setPrice(Float.parseFloat(price.getText().toString()));
+            item.setDescription(description.getText().toString());
+
+            if(ItemDao.Update(MainActivity.this, item)){
+                Toast.makeText(MainActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                items.clear();
+                items.addAll(ItemDao.getAll(MainActivity.this));
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+
+            }else{
+                Toast.makeText(MainActivity.this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        btnDelete.setOnClickListener(v -> {
+
+            if(ItemDao.delete(MainActivity.this, item.getId())){
+                Toast.makeText(MainActivity.this, "Xóa thành công", Toast.LENGTH_SHORT).show();
+                items.clear();
+                items.addAll(ItemDao.getAll(MainActivity.this));
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }else{
+                Toast.makeText(MainActivity.this, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    private void showAddDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_add, null);
+        builder.setView(view);
+        Dialog dialog = builder.create();
+        dialog.show();
+
+        EditText name = view.findViewById(R.id.addItemName);
+        EditText price = view.findViewById(R.id.addItemPrice);
+        EditText description = view.findViewById(R.id.addItemDescription);
+        Button save = view.findViewById(R.id.btnAddItem);
+        save.setOnClickListener(v -> {
+            String itemName = name.getText().toString();
+            Float itemPrice = Float.parseFloat(price.getText().toString());
+            String itemDescription = description.getText().toString();
+            if(ItemDao.insert(MainActivity.this, itemName, itemPrice,itemDescription)){
+                Toast.makeText(MainActivity.this, "Thêm sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                items.clear();
+                items.addAll(ItemDao.getAll(MainActivity.this));
+                adapter.notifyDataSetChanged();
+                dialog.dismiss();
+            }else{
+                Toast.makeText(MainActivity.this, "Thêm sản phẩm thất bại", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
