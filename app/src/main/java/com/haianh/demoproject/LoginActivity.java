@@ -47,6 +47,15 @@ public class LoginActivity extends AppCompatActivity {
             checkLogin();
 
         button_Login.setOnClickListener(v -> checkLogin());
+
+        button_SignUp.setOnClickListener(v -> {
+            getSharedPreferences("information.dat", 0).edit().clear().commit();
+            editText_User.setText("");
+            editText_Pass.setText("");
+
+            Intent intent = new Intent(this, SignupActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

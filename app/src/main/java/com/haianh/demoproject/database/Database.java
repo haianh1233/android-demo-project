@@ -17,11 +17,6 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(sql);
         db.execSQL("INSERT INTO ADMIN VALUES('admin', 'admin')");
 
-        // User
-        sql = "CREATE TABLE USER(Username Text primary key not null, password Text)";
-        db.execSQL(sql);
-        db.execSQL("INSERT INTO USER VALUES('user', 'user')");
-
         sql = "Create table Item(Id integer primary key autoincrement," +
                 "Name text, Price REAL, Description text)";
         db.execSQL(sql);
@@ -33,10 +28,6 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("Drop table if exists Item");
-        db.execSQL("Drop table if exists User");
-        db.execSQL("Drop table if exists Admin");
-
         onCreate(db);
     }
 }

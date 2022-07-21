@@ -1,5 +1,6 @@
 package com.haianh.demoproject.dao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,6 +28,7 @@ public class AdminDao {
             cs.moveToNext();
         }
         cs.close();
+        db.close();
         return data;
     }
     public boolean Authentication(String user, String pass){
@@ -34,8 +36,30 @@ public class AdminDao {
         String sql = "Select * from ADMIN where username =? and password=?";
         Cursor cs = db.rawQuery(sql, new String[]{user, pass});
         if(cs.getCount() <= 0){
+            cs.close();
+            db.close();
             return false;
         }
+        cs.close();
+        db.close();
         return true;
+    }
+
+    public boolean isExist(String user){
+        SQLiteDatabase db = mydata.getReadableDatabase();
+        String sql = "Select * from ADMIN where username =?";
+        Cursor cs = db.rawQuery(sql, new String[]{user});
+        return cs.getCount() > 1 ? true : false;
+    }
+
+    public boolean createAccount(String username, String password) {
+        SQLiteDatabase db = mydata.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("username", username);
+        values.put("password", password);
+
+        long row = db.insert("ADMIN", null,values);
+
+        return row > 0 ? true : false;
     }
 }
