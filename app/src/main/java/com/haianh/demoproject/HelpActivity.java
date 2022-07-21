@@ -3,6 +3,7 @@ package com.haianh.demoproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -11,7 +12,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 public class HelpActivity extends AppCompatActivity {
-    Button btnWeb, btnCall, btnSend, btnCap;
+    Button btnWeb, btnCall, btnSend, btnCap, btnStart, btnStop;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,8 @@ public class HelpActivity extends AppCompatActivity {
         btnCall = findViewById(R.id.btnCall);
         btnSend = findViewById(R.id.btnSend);
         btnCap = findViewById(R.id.btnCap);
+        btnStart = findViewById(R.id.btnStart);
+        btnStop = findViewById(R.id.btnStop);
 
         btnWeb.setOnClickListener(v -> {
             Uri web = Uri.parse("https://google.com");
@@ -52,5 +56,40 @@ public class HelpActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
+
+        btnStart.setOnClickListener(v -> {
+            play();
+        });
+
+        btnStop.setOnClickListener(v -> {
+            stopPlayer();
+        });
+    }
+
+    private void play() {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.music);
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlayer();
+                }
+            });
+        }
+        mediaPlayer.start();
+    }
+
+    private void stopPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopPlayer();
     }
 }
