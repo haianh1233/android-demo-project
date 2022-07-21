@@ -31,6 +31,7 @@ public class AdminDao {
         db.close();
         return data;
     }
+
     public boolean Authentication(String user, String pass){
         SQLiteDatabase db = mydata.getReadableDatabase();
         String sql = "Select * from ADMIN where username =? and password=?";

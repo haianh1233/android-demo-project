@@ -23,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.haianh.demoproject.dao.ItemDao;
+import com.haianh.demoproject.dao.ProductDao;
 import com.haianh.demoproject.model.Item;
+import com.haianh.demoproject.model.Product;
 
 import java.util.List;
 
@@ -172,7 +174,26 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             case R.id.help: {
+                Intent cur = getIntent();
+                String name = cur.getStringExtra("username");
                 Intent intent = new Intent(this, HelpActivity.class);
+                intent.putExtra("username", name);
+                startActivity(intent);
+                return true;
+            }
+            case R.id.shop: {
+                Intent cur = getIntent();
+                String name = cur.getStringExtra("username");
+                Intent intent = new Intent(this, ShopActivity.class);
+                intent.putExtra("username", name);
+                startActivity(intent);
+                return true;
+            }
+            case R.id.cart: {
+                Intent cur = getIntent();
+                String name = cur.getStringExtra("username");
+                Intent intent = new Intent(this, CartActivity.class);
+                intent.putExtra("username", name);
                 startActivity(intent);
                 return true;
             }
@@ -181,4 +202,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
